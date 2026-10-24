@@ -1,0 +1,22 @@
+name: hermsy
+label: Hermsy
+kind: platform
+version: 2.0.0
+description: >
+  Connects Hermes to Hermsy, the phone app: chat and calls use Hermes's API
+  server as they are; this adds the Inbox (deliver: hermsy), notifications,
+  the Brief, cloud voices for calls, and a Chief of Staff skill. The app
+  reaches it through the API server with the same key, so there is no
+  separate server to run. Pushes carry no content.
+author: illbytes
+# The API server's platform event route arrived in 0.19 (v2026.7.20).
+requires_hermes: ">=0.19"
+optional_env:
+  - name: HERMSY_PUSH_URL
+    description: "Push service that wakes phones (default: https://push.hermsy.illbytes.com; off to disable)"
+    prompt: "Push service URL (or empty for the default)"
+    password: false
+  - name: HERMSY_HOME_CHANNEL
+    description: "Cron home channel for `deliver: hermsy` (any label; default: phone)"
+    prompt: "Home channel (or empty)"
+    password: false
