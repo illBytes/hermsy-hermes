@@ -11,9 +11,17 @@ Chat and calls work with Hermes as it is. This plugin adds the rest:
 
 There is no separate server to run. The app reaches the plugin through Hermes's own API server, with the same address and key.
 
-## Set up in three steps
+## Set up
 
-**You need:**
+**With [hermes-spawn](https://github.com/oscarfrank/hermes-spawn)** (Hermes in Docker), one command does all of it: the API server, this plugin, an HTTPS address (Caddy, Cloudflare Tunnel or Tailscale), and a QR code for the app:
+
+```bash
+hermes-spawn connect <name>
+```
+
+Then install Hermsy, tap **Scan QR code**, and you're done.
+
+**By hand, in three steps.** You need:
 - Hermes 0.19 (v2026.7.20) or newer.
 - Its API server switched on (`API_SERVER_ENABLED=true` and `API_SERVER_KEY`).
 - The API server reachable from your phone over HTTPS, for example behind Caddy or a Cloudflare tunnel.
