@@ -120,7 +120,7 @@ All optional, in Hermes's `.env`:
   - The API server must be on: Hermsy talks to the plugin through it.
 - **No notifications.**
   - Check Hermsy's Settings → Notifications.
-  - Check the gateway log shows `[Hermsy] Ready` at start-up.
+  - Check Hermes's `logs/agent.log` (in its home folder) shows `[Hermsy] Ready` at start-up.
   - A push error in the log names the push service and what it answered.
   - Messages still reach the Inbox when you open the app.
 - **No Brief.**

@@ -83,6 +83,7 @@ class Setup:
             text.replace("{{PYTHON}}", self.python)
             .replace("{{SCRIPTS}}", str(self.scripts))
             .replace("{{DATA}}", str(self.data))
+            .replace("{{HOME}}", str(self.home))
         )
 
     def install_files(self) -> list[str]:

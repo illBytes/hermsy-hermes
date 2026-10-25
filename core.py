@@ -24,7 +24,7 @@ from .store import Store
 
 log = logging.getLogger(__name__)
 
-VERSION = "2.0.1"
+VERSION = "2.0.2"
 
 # The plugin accepts up to 100k characters; the app shows long results in full.
 MAX_MESSAGE_LENGTH = 100_000

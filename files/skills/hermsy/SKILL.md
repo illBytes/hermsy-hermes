@@ -32,11 +32,11 @@ This skill is theirs to change. Hermsy installed it once and never overwrites it
 - It runs `{{SCRIPTS}}/observe.py --brief` first, and can use read-only calendar or task tools if you have them.
 
 ## Setup and repair
-- In the app, Settings → Hermes server shows what the plugin found, and offers to create the Hermsy Brief and the Chief of Staff jobs, at times in the person's time zone.
+- In the app, Settings → Hermes shows what the plugin found, and offers to create the Hermsy Brief and the Chief of Staff jobs, at times in the person's time zone.
 - Plugin data is in `{{DATA}}/` (`hermsy.db` holds messages, Briefs and phones).
 - Scripts are in `{{SCRIPTS}}/`, and are theirs to edit.
 - **Notifications not arriving:**
   - In the app, check Settings → Notifications.
-  - The gateway log should show `[Hermsy] Ready` at start-up.
+  - `{{HOME}}/logs/agent.log` should show `[Hermsy] Ready` at start-up.
   - A push error names the push service (`push.hermsy.illbytes.com` by default, or `HERMSY_PUSH_URL` if set).
 - **Messages still reach the Inbox without push:** the app catches up whenever it opens.

@@ -280,6 +280,8 @@ def test_files_are_installed_once_and_never_overwritten(tmp_path, hermsy):
     text = skill.read_text()
     assert "{{" not in text
     assert f"{tmp_path}/scripts/hermsy/said.py" in text
+    hermsy_skill = (tmp_path / "skills" / "hermsy" / "hermsy" / "SKILL.md").read_text()
+    assert "{{" not in hermsy_skill and f"{tmp_path}/logs/agent.log" in hermsy_skill
     assert (tmp_path / "scripts" / "hermsy" / "observe.py").exists()
     assert (tmp_path / "hermsy" / "standing-orders.md").exists()
     skill.write_text("my own version")

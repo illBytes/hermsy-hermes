@@ -1,7 +1,7 @@
 name: hermsy
 label: Hermsy
 kind: platform
-version: 2.0.1
+version: 2.0.2
 description: >
   Connects Hermes to Hermsy, the phone app: chat and calls use Hermes's API
   server as they are; this adds the Inbox (deliver: hermsy), notifications,
