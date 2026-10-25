@@ -181,7 +181,39 @@ def test_the_brief_job_becomes_the_brief_and_a_broken_one_a_message(hermsy):
     assert hermsy.store.latest_brief()["headline"] == "The dentist at ten."
     assert hermsy.store.messages_since(0, 10) == []
     hermsy.deliver(wrapped("Frank Brief", "Sorry, no brief today."))
-    assert [m.title for m in hermsy.store.messages_since(0, 10)] == ["Frank Brief"]
+    [kept] = hermsy.store.messages_since(0, 10)
+    assert kept.title == "Frank Brief"
+    # The notification's first line is words, not JSON; the reply is below.
+    assert kept.text.startswith("This Brief could not be read")
+    assert "Sorry, no brief today." in kept.text
+
+
+def test_a_slipped_bracket_does_not_cost_the_brief():
+    from hermsy.brief import parse_brief
+
+    # Shaped like a real reply: the last section closed with "]" not "}".
+    slipped = (
+        '{"headline": "H", "sections": [\n'
+        '  {"id": "today", "items": [{"title": "Dentist", "time": "10:00"}]},\n'
+        '  {"id": "money", "items": [{"title": "Rent due"}]\n'
+        "  ]\n}"
+    )
+    brief = parse_brief(slipped)
+    assert [s["id"] for s in brief["sections"]] == ["today", "money"]
+
+    # Cut off before its last closers.
+    assert parse_brief('{"headline": "H", "sections": [{"id": "today", "items": [{"title": "A"}')["headline"] == "H"
+
+    # A broken object followed by a code fence and a sentence.
+    fenced = "```json\n" + slipped + "\n```\nHope this helps!"
+    assert parse_brief(fenced)["headline"] == "H"
+
+    # Brackets inside text are left alone.
+    quoted = '{"headline": "Call [Ada] about {rent}", "sections": [{"id": "due", "items": [{"title": "x"}]]}'
+    assert parse_brief(quoted)["headline"] == "Call [Ada] about {rent}"
+
+    with pytest.raises(ValueError):
+        parse_brief('{"headline": "H", "sections": [{"id": oops}]}')
 
 
 # -- what the app asks ----------------------------------------------------------

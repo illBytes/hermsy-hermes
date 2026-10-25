@@ -24,7 +24,7 @@ from .store import Store
 
 log = logging.getLogger(__name__)
 
-VERSION = "2.0.0"
+VERSION = "2.0.1"
 
 # The plugin accepts up to 100k characters; the app shows long results in full.
 MAX_MESSAGE_LENGTH = 100_000
@@ -111,8 +111,13 @@ class Core:
             try:
                 brief = self.store.add_brief(parse_brief(body["text"]))
             except ValueError as error:
-                # Not a usable Brief: keep it as a message so nothing is lost.
+                # Not a usable Brief: keep it as a message so nothing is lost,
+                # with a first line a person can read in the notification.
                 log.warning("hermsy: Brief reply was not a Brief (%s); kept as a message", error)
+                body["text"] = (
+                    "This Brief could not be read, so the Brief page still shows the last one. "
+                    "The reply is below.\n\n```\n" + body["text"] + "\n```"
+                )
             else:
                 self.waker.wake_all()
                 return {"success": True, "message_id": brief["id"]}

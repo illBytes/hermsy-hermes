@@ -29,6 +29,44 @@ def _text(value: object, limit: int) -> str | None:
     return text[:limit] or None
 
 
+def _repair_brackets(text: str) -> str:
+    """Fix missing or misplaced closing brackets (a common slip of small
+    models): when a closer does not match the open bracket, close the open
+    ones first; at the end, close whatever is still open.
+
+    Written by a Hermes agent on Oscar's server after a Brief came back with
+    a `]` where a `}` belonged."""
+    pairs = {"{": "}", "[": "]"}
+    out, stack, in_string, escaped = [], [], False, False
+    for char in text:
+        if in_string:
+            out.append(char)
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            continue
+        if char == '"':
+            in_string = True
+        elif char in pairs:
+            stack.append(pairs[char])
+        elif char in "}]":
+            if char not in stack:
+                continue  # stray closer: drop it
+            while stack and stack[-1] != char:
+                out.append(stack.pop())
+            stack.pop()
+        out.append(char)
+        if not stack and char in "}]":
+            break  # the object is complete; anything after is not JSON
+    if in_string:
+        out.append('"')
+    out.extend(reversed(stack))
+    return "".join(out)
+
+
 def parse_brief(reply: str) -> dict:
     """The brief in [reply], cleaned up. Raises ValueError when there is
     none to be found."""
@@ -38,7 +76,11 @@ def parse_brief(reply: str) -> dict:
     try:
         raw = json.loads(reply[start : end + 1])
     except json.JSONDecodeError as error:
-        raise ValueError(f"not valid JSON: {error}") from error
+        # One slipped bracket should not cost the whole Brief.
+        try:
+            raw = json.loads(_repair_brackets(reply[start:]))
+        except json.JSONDecodeError:
+            raise ValueError(f"not valid JSON: {error}") from error
     if not isinstance(raw, dict):
         raise ValueError("the brief is not an object")
     sections = []
