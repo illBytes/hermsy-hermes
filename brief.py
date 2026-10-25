@@ -34,7 +34,7 @@ def _repair_brackets(text: str) -> str:
     models): when a closer does not match the open bracket, close the open
     ones first; at the end, close whatever is still open.
 
-    Written by a Hermes agent on Oscar's server after a Brief came back with
+    Written by a Hermes agent itself, after a Brief came back with
     a `]` where a `}` belonged."""
     pairs = {"{": "}", "[": "]"}
     out, stack, in_string, escaped = [], [], False, False

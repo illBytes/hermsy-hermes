@@ -111,6 +111,7 @@ All optional, in Hermes's `.env`:
 |---|---|---|
 | `HERMSY_PUSH_URL` | `https://push.hermsy.illbytes.com` | The push service; `off` to turn pushes off |
 | `HERMSY_HOME_CHANNEL` | `phone` | The home channel `deliver: hermsy` uses |
+| `HERMSY_RESTART_NOTICES` | off | `on` to get Hermes's "shutting down / restarting" notices on the phone |
 | `OPENAI_API_KEY`, `ELEVENLABS_API_KEY` | | Turn on that provider's voices for calls |
 
 ## When something is off

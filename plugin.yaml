@@ -1,7 +1,7 @@
 name: hermsy
 label: Hermsy
 kind: platform
-version: 2.0.2
+version: 2.0.3
 description: >
   Connects Hermes to Hermsy, the phone app: chat and calls use Hermes's API
   server as they are; this adds the Inbox (deliver: hermsy), notifications,
@@ -15,6 +15,10 @@ optional_env:
   - name: HERMSY_PUSH_URL
     description: "Push service that wakes phones (default: https://push.hermsy.illbytes.com; off to disable)"
     prompt: "Push service URL (or empty for the default)"
+    password: false
+  - name: HERMSY_RESTART_NOTICES
+    description: "on to get Hermes's restart/shutdown notices on the phone (default: off)"
+    prompt: "Restart notices on the phone (on/off)"
     password: false
   - name: HERMSY_HOME_CHANNEL
     description: "Cron home channel for `deliver: hermsy` (any label; default: phone)"

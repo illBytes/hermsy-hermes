@@ -1,7 +1,7 @@
 """Unit tests for the hermsy plugin with Hermes's gateway modules stubbed out.
 
-Run from server/relay: `.venv/bin/pytest ../hermes-plugin/tests` (in the
-plugin's own repo: `pytest tests`, with httpx installed). The path
+Run with `server/.venv/bin/python -m pytest -q server/hermes-plugin/tests` (in
+the plugin's own repo: `pytest tests`, with httpx installed). The path
 through a real Hermes gateway is covered by the end-to-end check in
 the plugin's README.
 """
@@ -378,6 +378,19 @@ def test_the_app_must_send_the_api_server_key(monkeypatch):
     assert hermsy.verify_http_event_request("Bearer server-key-1234567890") == (True, "")
     assert hermsy.verify_http_event_request("Bearer wrong")[0] is False
     assert hermsy.verify_http_event_request("")[0] is False
+
+
+def test_restart_notices_stay_off_the_phone(monkeypatch):
+    monkeypatch.delenv("HERMSY_RESTART_NOTICES", raising=False)
+    config = adapter.PlatformConfig()
+    config.gateway_restart_notification = True
+    adapter.HermsyAdapter(config)
+    assert config.gateway_restart_notification is False
+    monkeypatch.setenv("HERMSY_RESTART_NOTICES", "on")
+    config = adapter.PlatformConfig()
+    config.gateway_restart_notification = True
+    adapter.HermsyAdapter(config)
+    assert config.gateway_restart_notification is True
 
 
 def test_push_can_be_turned_off(monkeypatch):

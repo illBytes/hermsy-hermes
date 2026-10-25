@@ -11,6 +11,8 @@ Optional env:
     HERMSY_PUSH_URL      Push service (default: https://push.hermsy.illbytes.com;
                          "off" stores messages without waking phones)
     HERMSY_HOME_CHANNEL  Home channel for ``deliver: hermsy`` (default: phone)
+    HERMSY_RESTART_NOTICES  "on" to get Hermes's "shutting down / restarting"
+                         notices on the phone (default: off)
 """
 
 import asyncio
@@ -122,6 +124,14 @@ class HermsyAdapter(BasePlatformAdapter):
     def __init__(self, config: PlatformConfig):
         super().__init__(config=config, platform=Platform("hermsy"))
         self._pruner: Optional[asyncio.Task] = None
+        # "Hermes is restarting" is a note for whoever runs Hermes, not a phone
+        # notification; Hermes sends it to every home channel unless the
+        # platform's config says not to.
+        if _env("HERMSY_RESTART_NOTICES").lower() not in ("1", "on", "true", "yes"):
+            try:
+                config.gateway_restart_notification = False
+            except Exception:  # noqa: BLE001 - an older Hermes without the field
+                pass
 
     async def connect(self, *, is_reconnect: bool = False) -> bool:
         if not HTTPX_AVAILABLE:
