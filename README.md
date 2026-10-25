@@ -92,7 +92,14 @@ Out of the box it sees the agent's own memory, upcoming dates, open loops and fa
 - Messages, Briefs and your standing orders stay on your Hermes. The app fetches them over your own HTTPS connection with your API key.
 - Notifications go through Firebase Cloud Messaging. Google only accepts pushes for the Hermsy app from its publisher, so the plugin asks **illbytes' push service** (`push.hermsy.illbytes.com`) to wake your phone.
   - The push service is given your phone's push token and nothing else.
-  - The push itself carries nothing. Your phone then asks your Hermes what is new.
+  - The push itself carries nothing: its whole content is `{"type": "wake"}`, with no text, title or message ID. Your phone then asks your Hermes, with your key, what is new, and builds the notification itself.
+
+  | | Sees |
+  |---|---|
+  | Google / Firebase | That the app on your phone was woken, and when. Nothing else. |
+  | illbytes' push service | Your phone's push token, and when it was woken. It stores neither. |
+  | Your Hermes | The messages (it wrote them). |
+  | Your lock screen | "Hermsy" only; the text shows after you unlock. |
   - Message text, titles, your Hermes address and your key never leave your server.
 - To run without the push service, set `HERMSY_PUSH_URL=off`. The Inbox then fills whenever you open Hermsy.
 
