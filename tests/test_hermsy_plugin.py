@@ -393,6 +393,11 @@ def test_restart_notices_stay_off_the_phone(monkeypatch):
     assert config.gateway_restart_notification is True
 
 
+def test_long_cron_replies_reach_the_plugin_whole():
+    # Hermes cuts cron output at 4,000 characters unless the adapter takes it whole.
+    assert adapter.HermsyAdapter.splits_long_messages is True
+
+
 def test_push_can_be_turned_off(monkeypatch):
     monkeypatch.setenv("HERMSY_PUSH_URL", "off")
     assert adapter.push_url() == ""

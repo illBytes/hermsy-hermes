@@ -120,6 +120,9 @@ class HermsyAdapter(BasePlatformAdapter):
     comes in through the API server's event route."""
 
     MAX_MESSAGE_LENGTH = MAX_MESSAGE_LENGTH
+    # The store takes a whole reply, so Hermes must not cut a long cron reply
+    # at 4,000 characters for us: a cut Brief is half a JSON object.
+    splits_long_messages = True
 
     def __init__(self, config: PlatformConfig):
         super().__init__(config=config, platform=Platform("hermsy"))
